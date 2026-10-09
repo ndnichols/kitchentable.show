@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kitchen Table AI Safety</title>
+<meta name="description" content="AI safety for normal people. Short, plain-English episodes about what AI is, where it's headed, and what you can do about it. About ten minutes, every Tuesday.">
+<meta property="og:title" content="Kitchen Table AI Safety">
+<meta property="og:description" content="AI safety for normal people. About ten minutes, every Tuesday.">
+<meta property="og:url" content="https://kitchentable.show">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://img.transistorcdn.com/_cSxjfIcsYNP_VtwsS5aJn28FU3ipskJGv-7umaiE3k/rs:fill:0:0:1/w:800/h:800/q:60/mb:500000/aHR0cHM6Ly9pbWct/dXBsb2FkLXByb2R1/Y3Rpb24udHJhbnNp/c3Rvci5mbS8xZDQ4/ZTBmOGE1ODI1YmIz/NzE4Y2VhYmI5ZGZi/M2IwMi5wbmc.webp">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f6efe4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6efe4;
+    --card: #fffaf2;
+    --ink: #2a221b;
+    --muted: #6b5d50;
+    --line: #e3d6c4;
+    --accent: #b5452b;
+    --accent-ink: #ffffff;
+    --accent-hover: #9a3a24;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1814;
+      --card: #26201b;
+      --ink: #f3ebe0;
+      --muted: #b3a593;
+      --line: #3a3129;
+      --accent: #e0694b;
+      --accent-ink: #1c1814;
+      --accent-hover: #f08263;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 17px/1.55 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: calc(28px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom));
+  }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .logo { width: 56px; height: 56px; border-radius: 12px; flex: none; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); }
+  .logo svg { width: 36px; height: 36px; }
+  .kicker {
+    margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  h1 {
+    margin: 2px 0 0; font-family: Fraunces, Georgia, serif; font-weight: 700;
+    font-size: clamp(26px, 7vw, 36px); line-height: 1.1;
+  }
+  .pitch { font-size: 19px; margin: 0 0 22px; }
+  .pitch strong { font-weight: 600; }
+
+  .video {
+    position: relative; aspect-ratio: 16 / 9; width: 100%;
+    border-radius: 14px; overflow: hidden; background: #000;
+    box-shadow: 0 8px 28px rgba(42, 34, 27, .18);
+  }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .caption { margin: 8px 2px 24px; font-size: 14px; color: var(--muted); }
+
+  .buttons { display: grid; gap: 12px; grid-template-columns: 1fr; }
+  @media (min-width: 520px) { .buttons { grid-template-columns: 1fr 1fr; } }
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 56px; padding: 14px 18px; border-radius: 12px;
+    font-weight: 600; font-size: 17px; text-decoration: none;
+    transition: background-color .15s, border-color .15s;
+  }
+  .btn svg { width: 22px; height: 22px; flex: none; }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--card); color: var(--ink); border: 2px solid var(--line); }
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  .apps { margin: 14px 0 0; text-align: center; font-size: 14px; color: var(--muted); }
+  .apps a { color: var(--muted); }
+
+  .about {
+    margin-top: 32px; padding: 18px; background: var(--card);
+    border: 1px solid var(--line); border-radius: 14px;
+  }
+  .about p { margin: 0 0 10px; }
+  .about p:last-child { margin: 0; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  footer { margin-top: 28px; font-size: 13px; color: var(--muted); text-align: center; }
+  footer p { margin: 4px 0; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="5" rx="2" fill="currentColor"/><rect x="10" y="21" width="4" height="18" rx="1.5" fill="currentColor"/><rect x="34" y="21" width="4" height="18" rx="1.5" fill="currentColor"/><path d="M20 15c0-3 2-3 2-6M26 15c0-3 2-3 2-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".6"/></svg>
+    </div>
+    <div>
+      <p class="kicker">A weekly show</p>
+      <h1>Kitchen Table AI Safety</h1>
+    </div>
+  </header>
+
+  <p class="pitch">AI risk explained for normal people. <strong>About ten minutes, every Tuesday.</strong> No computer science degree required.</p>
+
+  <!-- UULF + channel ID (minus "UC") = the channel's long-form uploads, newest first, no Shorts. Updates itself. -->
+  <div class="video">
+    <iframe
+      src="https://www.youtube-nocookie.com/embed/videoseries?list=UULFDFIls7LG73VnI5gM1rkrcQ&rel=0"
+      title="Latest Kitchen Table episode"
+      loading="lazy"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen></iframe>
+  </div>
+  <p class="caption">Latest episode</p>
+
+  <div class="buttons">
+    <a class="btn btn-primary" href="https://www.youtube.com/@KitchenTableAISafety">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>
+      Watch on YouTube
+    </a>
+    <a class="btn btn-secondary" href="https://podcast.kitchentable.show/subscribe">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M4 15v-3a8 8 0 0 1 16 0v3M4 15a2 2 0 0 0 2 2h1v-5H6a2 2 0 0 0-2 2zm16 0a2 2 0 0 1-2 2h-1v-5h1a2 2 0 0 1 2 2z"/></svg>
+      Listen to the podcast
+    </a>
+  </div>
+  <p class="apps">
+    <a href="https://podcasts.apple.com/podcast/kitchen-table-ai-safety/id6818607046">Apple Podcasts</a> ·
+    <a href="https://open.spotify.com/show/33bJHQuliiPXXWj2JWkNJd">Spotify</a> ·
+    <a href="https://overcast.fm/itunes6818607046">Overcast</a> ·
+    <a href="https://feeds.transistor.fm/kitchen-table-ai-safety">RSS</a>
+  </p>
+
+  <section class="about">
+    <p>Hosted by <a href="https://natenichols.life">Nate Nichols</a>, who has spent almost twenty years researching, building, and selling AI systems, and leads public AI workshops at Chicago libraries.</p>
+    <p>Every claim is sourced in the show notes. Here's <a href="https://podcast.kitchentable.show/how-this-show-is-made">how this show is made</a>, including how I do and don't use AI.</p>
+    <p>Get in touch: <a href="mailto:nate@natenichols.life">nate@natenichols.life</a></p>
+  </section>
+
+  <footer>
+    <p>Opinions are Nate's own and do not represent his employer.</p>
+    <p>© 2026 Nate Nichols</p>
+  </footer>
+</main>
+</body>
+</html>
