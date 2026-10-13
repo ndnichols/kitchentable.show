@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Kitchen Table AI Safety</title>
+<script>
+  // kitchentable.show used to be the Transistor site; it now lives at
+  // podcast.kitchentable.show. Any path this landing page doesn't have
+  // (old episode links, /how-this-show-is-made, etc.) gets forwarded to
+  // the same path on the podcast site.
+  (function () {
+    var target = "https://podcast.kitchentable.show" +
+      location.pathname + location.search + location.hash;
+    location.replace(target);
+  })();
+</script>
+<style>
+  :root { --bg: #f6efe4; --ink: #2a221b; --muted: #6b5d50; --accent: #b5452b; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1c1814; --ink: #f3ebe0; --muted: #b3a593; --accent: #e0694b; }
+  }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    background: var(--bg); color: var(--ink);
+    font: 400 17px/1.55 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 16px; text-align: center;
+  }
+  p { margin: 0 0 8px; }
+  .muted { color: var(--muted); font-size: 15px; }
+  a { color: var(--accent); font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <p>Taking you to the podcast site…</p>
+  <p class="muted">If nothing happens, go to
+    <a href="https://podcast.kitchentable.show">podcast.kitchentable.show</a>
+    or back to <a href="/">kitchentable.show</a>.</p>
+</main>
+</body>
+</html>
