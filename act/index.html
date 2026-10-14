@@ -78,19 +78,23 @@
   @media (min-width: 520px) { .member .actions { grid-template-columns: 1.3fr 1fr; } }
   .member .phone { display: block; font-size: 14px; color: var(--muted); margin-top: 8px; }
 
-  .script { background: var(--bg); border: 1px dashed var(--line); border-radius: 12px; padding: 14px 16px; margin: 10px 0 12px; font-size: 17px; }
+  .script { background: var(--bg); border: 1px dashed var(--line); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; font-size: 16px; }
+  .script .label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
   .script p { margin: 0 0 8px; }
   .script p:last-child { margin: 0; }
   .fill { background: color-mix(in srgb, var(--accent) 16%, transparent); border-radius: 4px; padding: 0 3px; }
   .row { display: flex; gap: 10px; flex-wrap: wrap; }
   .row .btn { flex: 1 1 200px; }
 
-  details.tips { border: 1px solid var(--line); border-radius: 14px; background: var(--card); margin: 0 0 16px; }
-  details.tips summary { cursor: pointer; padding: 16px 18px; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .reassure { background: color-mix(in srgb, var(--ok) 12%, var(--card)); border: 1px solid color-mix(in srgb, var(--ok) 35%, var(--line)); border-radius: 14px; padding: 16px 18px; margin: 0 0 16px; }
+  .reassure p { margin: 0 0 6px; }
+  .reassure .calm-title { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 20px; line-height: 1.25; }
+  details.tips { margin: 6px 0 0; }
+  details.tips summary { cursor: pointer; padding: 6px 0 0; font-weight: 600; font-size: 15px; color: var(--ink); list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   details.tips summary::-webkit-details-marker { display: none; }
   details.tips summary::after { content: "+"; font-size: 22px; line-height: 1; color: var(--accent); }
   details.tips[open] summary::after { content: "–"; }
-  details.tips ul { margin: 0; padding: 0 18px 16px 38px; }
+  details.tips ul { margin: 8px 0 0; padding: 0 0 0 20px; font-size: 16px; }
   details.tips li { margin: 0 0 8px; }
 
   .done-wrap { text-align: center; }
@@ -130,33 +134,26 @@
   </section>
 
   <section id="results" hidden>
+    <section class="reassure" aria-labelledby="calm">
+      <p class="calm-title" id="calm">Never called Congress? It's a one-minute call.</p>
+      <p>A staffer answers, asks your name and ZIP code, and writes down your view. Nobody debates you. Your script is right under each name.</p>
+      <details class="tips" id="tips">
+        <summary>More about what happens when you call</summary>
+        <ul>
+          <li>A staffer or intern answers. They're not the member of Congress, and they're not going to argue with you.</li>
+          <li>They'll ask your name and ZIP code, to confirm you're a constituent.</li>
+          <li>You read the script. They note your topic and which side you're on. That's it.</li>
+          <li>Got voicemail? Leave the same message. It still gets counted.</li>
+          <li>You don't need to be an expert. "I'm a constituent and I care about this" is the whole qualification.</li>
+        </ul>
+      </details>
+    </section>
+
     <section class="card" aria-labelledby="step2">
       <h2 id="step2">Call (best) or write</h2>
       <p class="small muted" id="multiNote" hidden></p>
       <div id="members"></div>
-    </section>
-
-    <details class="tips" id="tips">
-      <summary>What happens when I call? (It's easier than you think)</summary>
-      <ul>
-        <li>A staffer or intern answers. They're not the member of Congress, and they're not going to argue with you.</li>
-        <li>They'll ask your name and ZIP code, to confirm you're a constituent.</li>
-        <li>You read the script below. They note your topic and which side you're on. That's it.</li>
-        <li>The whole call usually takes about a minute.</li>
-        <li>Got voicemail? Leave the same message. It still gets counted.</li>
-        <li>You don't need to be an expert. "I'm a constituent and I care about this" is the whole qualification.</li>
-      </ul>
-    </details>
-
-    <section class="card" aria-labelledby="step3">
-      <h2 id="step3">Your script</h2>
-      <p class="small muted" style="margin:0">Read it as is, or put it in your own words. The name updates to whoever you tap Call or Write for.</p>
-      <div class="script" id="callScript"></div>
-      <div class="row">
-        <button class="btn btn-secondary" type="button" id="copyCall">Copy call script</button>
-        <button class="btn btn-secondary" type="button" id="copyLetter">Copy written message</button>
-      </div>
-      <p class="small muted" style="margin:12px 0 0">Writing instead? Copy the written message, tap “Write” next to a name, and paste it into their contact form. Their forms ask for your address to confirm you're a constituent.</p>
+      <p class="small muted" style="margin:14px 0 0">Writing instead? “Copy message & write” copies a short message and opens their contact form. Paste it in. Their forms ask for your address to confirm you're a constituent.</p>
     </section>
 
     <section class="card done-wrap" id="doneCard">
@@ -183,7 +180,7 @@
   const NO_SENATORS = new Set(['DC','PR','GU','VI','AS','MP']);
   const HOUSE_LOOKUP = 'https://www.house.gov/representatives/find-your-representative';
   const $ = (id) => document.getElementById(id);
-  let data = null, zip = '', firstTarget = 'your member of Congress';
+  let data = null, zip = '';
 
   function track(path, title) {
     try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'act-' + path, title: title || path, event: true }); } catch (e) {}
@@ -193,8 +190,6 @@
   async function getJSON(u) { const r = await fetch(u); if (!r.ok) throw new Error(r.status); return r.json(); }
   async function members() { if (!data) data = await getJSON('data/legislators.json'); return data; }
 
-  // Phones: tips open by default on small screens
-  if (window.matchMedia('(max-width: 600px)').matches) $('tips').open = true;
   $('tips').addEventListener('toggle', () => { if ($('tips').open) track('tips-open', 'Opened calling tips'); });
 
   const sel = $('state');
@@ -219,7 +214,6 @@ Thank you,
 [your name]`
     };
   }
-  function updateScript() { $('callScript').innerHTML = scriptFor(firstTarget).call; }
 
   function memberHTML(kind, m) {
     const tel = m.phone ? 'tel:+1' + m.phone.replace(/\D/g, '') : '';
@@ -229,9 +223,10 @@ Thank you,
     return `<div class="member">
       <p class="who">${who}</p>
       <p class="name">${esc((kind === 'sen' ? 'Sen. ' : m.title + ' ') + m.name)}</p>
+      <div class="script"><p class="label">What to say</p>${scriptFor(target).call}</div>
       <div class="actions">
         ${tel ? `<a class="btn btn-primary" href="${tel}" data-ev="call" data-who="${kind}" data-target="${esc(target)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>Call ${esc(m.last)}'s office</a>` : ''}
-        ${writeUrl ? `<a class="btn btn-secondary" href="${esc(writeUrl)}" target="_blank" rel="noopener" data-ev="write" data-who="${kind}" data-target="${esc(target)}">Write${m.form ? '' : ' (via their site)'}</a>` : ''}
+        ${writeUrl ? `<a class="btn btn-secondary" href="${esc(writeUrl)}" target="_blank" rel="noopener" data-ev="write" data-who="${kind}" data-target="${esc(target)}">Copy message &amp; write</a>` : ''}
       </div>
       ${m.phone ? `<span class="phone">DC office: ${esc(m.phone)}</span>` : ''}
     </div>`;
@@ -251,10 +246,6 @@ Thank you,
     $('multiNote').innerHTML = notes.join(' ');
     $('multiNote').hidden = !notes.length;
     $('members').innerHTML = out.join('') || `<p>We couldn't find members for that area. <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">Try house.gov's lookup</a>.</p>`;
-    const first = reps[0] ? (reps[0].title === 'Rep.' ? 'Representative ' : reps[0].title + ' ') + reps[0].last
-                : (d.senate[state] || [])[0] ? 'Senator ' + d.senate[state][0].last : 'your member of Congress';
-    firstTarget = (reps.length > 1) ? 'my representative' : first;
-    updateScript();
     $('results').hidden = false;
     $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -285,7 +276,7 @@ Thank you,
     const a = e.target.closest('a[data-ev]');
     if (!a) return;
     const who = a.dataset.who === 'sen' ? 'senator' : 'house';
-    if (a.dataset.target) { firstTarget = a.dataset.target; updateScript(); }
+    if (a.dataset.ev === 'write' && a.dataset.target) copy(scriptFor(a.dataset.target).letter, 'Message copied. Paste it into their form.', 'copy-letter');
     track(a.dataset.ev + '-' + who, (a.dataset.ev === 'call' ? 'Call: ' : 'Write: ') + who);
   });
 
@@ -294,8 +285,6 @@ Thank you,
     catch (e) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); toast(label); } catch (_) { toast('Copy didn’t work. Select the text instead.'); } t.remove(); }
     track(ev, label);
   }
-  $('copyCall').addEventListener('click', () => copy(scriptFor(firstTarget).callText, 'Call script copied', 'copy-call'));
-  $('copyLetter').addEventListener('click', () => copy(scriptFor(firstTarget).letter, 'Message copied', 'copy-letter'));
 
   $('doneBtn').addEventListener('click', () => {
     track('done', 'Said they did it');
@@ -310,7 +299,6 @@ Thank you,
     else copy(url, 'Link copied', 'share-copy');
   });
 
-  updateScript();
 })();
 </script>
 <script data-goatcounter="https://ndnichols.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
