@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact Congress · Kitchen Table AI Safety</title>
+<meta name="description" content="Two minutes: tell your members of Congress that AI companies should have to report when things go wrong.">
+<meta property="og:title" content="Tell Congress: AI companies should report when things go wrong">
+<meta property="og:description" content="Look up your members of Congress by ZIP code, with a short script. Takes two minutes.">
+<meta property="og:url" content="https://kitchentable.show/act">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f6efe4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6efe4; --card: #fffaf2; --ink: #2a221b; --muted: #6b5d50; --line: #e3d6c4;
+    --accent: #b5452b; --accent-ink: #ffffff; --accent-hover: #9a3a24; --ok: #2f6b3a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1814; --card: #26201b; --ink: #f3ebe0; --muted: #b3a593; --line: #3a3129;
+      --accent: #e0694b; --accent-ink: #1c1814; --accent-hover: #f08263; --ok: #7fbf8a;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.55 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: calc(24px + env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom)); }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .home { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; }
+  .home:hover { color: var(--ink); }
+  .home .dot { width: 22px; height: 22px; border-radius: 6px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
+  .home svg { width: 15px; height: 15px; }
+  .kicker { margin: 22px 0 0; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { margin: 4px 0 12px; font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: clamp(28px, 7.5vw, 38px); line-height: 1.1; }
+  h2 { font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; line-height: 1.2; margin: 0 0 8px; }
+  .lede { font-size: 18px; margin: 0 0 22px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 0 0 16px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 14px; }
+
+  form.zip { display: flex; gap: 10px; flex-wrap: wrap; }
+  form.zip label { flex-basis: 100%; font-weight: 600; }
+  input[type=text], select {
+    font: 500 20px Inter, system-ui, sans-serif; color: var(--ink); background: var(--bg);
+    border: 2px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 56px;
+  }
+  input[type=text] { flex: 1 1 140px; min-width: 0; letter-spacing: .08em; }
+  select { width: 100%; font-size: 17px; }
+  input[type=text]:focus, select:focus { border-color: var(--accent); outline: none; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 52px; padding: 12px 18px; border-radius: 12px; border: 2px solid transparent;
+    font: 600 17px Inter, system-ui, sans-serif; text-decoration: none; cursor: pointer;
+    transition: background-color .15s, border-color .15s;
+  }
+  .btn svg { width: 20px; height: 20px; flex: none; }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-secondary:hover { border-color: var(--accent); }
+  .btn-block { width: 100%; }
+
+  .msg { margin: 12px 0 0; }
+  .msg:empty { display: none; }
+
+  .member { padding: 16px 0; border-top: 1px solid var(--line); }
+  .member:first-of-type { border-top: 0; padding-top: 4px; }
+  .member .who { margin: 0 0 2px; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .member .name { margin: 0 0 12px; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; line-height: 1.2; }
+  .member .actions { display: grid; gap: 10px; grid-template-columns: 1fr; }
+  @media (min-width: 520px) { .member .actions { grid-template-columns: 1.3fr 1fr; } }
+  .member .phone { display: block; font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+  .script { background: var(--bg); border: 1px dashed var(--line); border-radius: 12px; padding: 14px 16px; margin: 10px 0 12px; font-size: 17px; }
+  .script p { margin: 0 0 8px; }
+  .script p:last-child { margin: 0; }
+  .fill { background: color-mix(in srgb, var(--accent) 16%, transparent); border-radius: 4px; padding: 0 3px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .row .btn { flex: 1 1 200px; }
+
+  details.tips { border: 1px solid var(--line); border-radius: 14px; background: var(--card); margin: 0 0 16px; }
+  details.tips summary { cursor: pointer; padding: 16px 18px; font-weight: 600; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  details.tips summary::-webkit-details-marker { display: none; }
+  details.tips summary::after { content: "+"; font-size: 22px; line-height: 1; color: var(--accent); }
+  details.tips[open] summary::after { content: "–"; }
+  details.tips ul { margin: 0; padding: 0 18px 16px 38px; }
+  details.tips li { margin: 0 0 8px; }
+
+  .done-wrap { text-align: center; }
+  .thanks { display: none; text-align: center; }
+  .thanks.show { display: block; }
+  .thanks .big { font-family: Fraunces, Georgia, serif; font-size: 26px; font-weight: 700; margin: 4px 0 6px; color: var(--ok); }
+  [hidden] { display: none !important; }
+
+  footer { margin-top: 28px; font-size: 13px; color: var(--muted); text-align: center; }
+  footer p { margin: 4px 0; }
+  footer a { color: var(--muted); }
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 15px; font-weight: 500; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<main>
+  <a class="home" href="/"><span class="dot" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="5" rx="2" fill="currentColor"/><rect x="10" y="21" width="4" height="18" rx="1.5" fill="currentColor"/><rect x="34" y="21" width="4" height="18" rx="1.5" fill="currentColor"/></svg></span>Kitchen Table AI Safety</a>
+
+  <p class="kicker">Two minutes, one call</p>
+  <h1>Tell Congress: AI companies should report when things go wrong.</h1>
+  <p class="lede">Right now, there's no national rule that makes AI companies tell anyone when their AI is misused or something goes badly wrong. We mostly find out when a company decides to tell us. Nuclear power plants have to report problems. AI companies should too.</p>
+
+  <section class="card" aria-labelledby="step1">
+    <h2 id="step1">Find your members of Congress</h2>
+    <form class="zip" id="zipForm" autocomplete="on">
+      <label for="zip">Your ZIP code</label>
+      <input type="text" id="zip" name="postal-code" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{5}" maxlength="5" placeholder="60640" required>
+      <button class="btn btn-primary" type="submit">Look up</button>
+    </form>
+    <p class="msg small muted" id="zipMsg" role="status" aria-live="polite"></p>
+    <div id="stateWrap" hidden>
+      <label for="state" class="small" style="display:block;font-weight:600;margin:14px 0 6px">Or pick your state (shows your senators)</label>
+      <select id="state"><option value="">Choose a state…</option></select>
+    </div>
+    <p class="small muted" style="margin:12px 0 0">We don't collect your ZIP code. The lookup happens in your browser.</p>
+  </section>
+
+  <section id="results" hidden>
+    <section class="card" aria-labelledby="step2">
+      <h2 id="step2">Call (best) or write</h2>
+      <p class="small muted" id="multiNote" hidden></p>
+      <div id="members"></div>
+    </section>
+
+    <details class="tips" id="tips">
+      <summary>What happens when I call? (It's easier than you think)</summary>
+      <ul>
+        <li>A staffer or intern answers. They're not the member of Congress, and they're not going to argue with you.</li>
+        <li>They'll ask your name and ZIP code, to confirm you're a constituent.</li>
+        <li>You read the script below. They note your topic and which side you're on. That's it.</li>
+        <li>The whole call usually takes about a minute.</li>
+        <li>Got voicemail? Leave the same message. It still gets counted.</li>
+        <li>You don't need to be an expert. "I'm a constituent and I care about this" is the whole qualification.</li>
+      </ul>
+    </details>
+
+    <section class="card" aria-labelledby="step3">
+      <h2 id="step3">Your script</h2>
+      <p class="small muted" style="margin:0">Read it as is, or put it in your own words. The name updates to whoever you tap Call or Write for.</p>
+      <div class="script" id="callScript"></div>
+      <div class="row">
+        <button class="btn btn-secondary" type="button" id="copyCall">Copy call script</button>
+        <button class="btn btn-secondary" type="button" id="copyLetter">Copy written message</button>
+      </div>
+      <p class="small muted" style="margin:12px 0 0">Writing instead? Copy the written message, tap “Write” next to a name, and paste it into their contact form. Their forms ask for your address to confirm you're a constituent.</p>
+    </section>
+
+    <section class="card done-wrap" id="doneCard">
+      <button class="btn btn-primary btn-block" type="button" id="doneBtn">I did it ✓</button>
+      <div class="thanks" id="thanks" role="status" aria-live="polite">
+        <p class="big">Thank you.</p>
+        <p style="margin:0">Seriously. This is how it works: a lot of regular people saying the same thing. If you want to multiply it, send this page to one friend.</p>
+        <div class="row" style="margin-top:14px"><button class="btn btn-secondary" type="button" id="shareBtn">Share this page</button></div>
+      </div>
+    </section>
+  </section>
+
+  <footer>
+    <p>From the <a href="/">Kitchen Table AI Safety</a> podcast, episode 3: “AI is grown, not programmed.” Sources are in the <a href="https://podcast.kitchentable.show">show notes</a>.</p>
+    <p>This page counts button clicks anonymously (no cookies, nothing personal). Member info from the public-domain <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a> project.</p>
+    <p>Not affiliated with any party, campaign, or AI company. Opinions are Nate's own and do not represent his employer.</p>
+  </footer>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  const STATES = {AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'District of Columbia',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',PR:'Puerto Rico',GU:'Guam',VI:'U.S. Virgin Islands',AS:'American Samoa',MP:'Northern Mariana Islands'};
+  const NO_SENATORS = new Set(['DC','PR','GU','VI','AS','MP']);
+  const HOUSE_LOOKUP = 'https://www.house.gov/representatives/find-your-representative';
+  const $ = (id) => document.getElementById(id);
+  let data = null, zip = '', firstTarget = 'your member of Congress';
+
+  function track(path, title) {
+    try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'act-' + path, title: title || path, event: true }); } catch (e) {}
+  }
+  function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1800); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  async function getJSON(u) { const r = await fetch(u); if (!r.ok) throw new Error(r.status); return r.json(); }
+  async function members() { if (!data) data = await getJSON('data/legislators.json'); return data; }
+
+  // Phones: tips open by default on small screens
+  if (window.matchMedia('(max-width: 600px)').matches) $('tips').open = true;
+  $('tips').addEventListener('toggle', () => { if ($('tips').open) track('tips-open', 'Opened calling tips'); });
+
+  const sel = $('state');
+  Object.entries(STATES).sort((a, b) => a[1].localeCompare(b[1])).forEach(([k, v]) => { const o = document.createElement('option'); o.value = k; o.textContent = v; sel.appendChild(o); });
+  sel.addEventListener('change', async () => { if (!sel.value) return; track('state-pick', 'Picked a state'); const d = await members(); render(sel.value, [], d, true); });
+
+  function scriptFor(target) {
+    return {
+      call: `<p>Hi, my name is <span class="fill">[your name]</span>, and I'm a constituent from ZIP code <span class="fill">${esc(zip || '[your ZIP]')}</span>.</p>
+<p>I'm calling to ask ${esc(target)} to support requiring AI companies to report when things go wrong with their AI, and not to override state laws that already require it.</p>
+<p>Thank you!</p>`,
+      callText: `Hi, my name is [your name], and I'm a constituent from ZIP code ${zip || '[your ZIP]'}. I'm calling to ask ${target} to support requiring AI companies to report when things go wrong with their AI, and not to override state laws that already require it. Thank you!`,
+      letter: `Subject: Require AI companies to report when things go wrong
+
+Dear ${target},
+
+I'm a constituent from ZIP code ${zip || '[your ZIP]'}. Right now there's no national rule that requires AI companies to report when their AI systems are misused or something goes seriously wrong. We mostly find out only when a company decides to tell us.
+
+Nuclear power plants have to report problems. AI companies should too. Please support national rules that require AI companies to report when things go wrong, and don't override the state laws that already require it.
+
+Thank you,
+[your name]`
+    };
+  }
+  function updateScript() { $('callScript').innerHTML = scriptFor(firstTarget).call; }
+
+  function memberHTML(kind, m) {
+    const tel = m.phone ? 'tel:+1' + m.phone.replace(/\D/g, '') : '';
+    const writeUrl = m.form || m.url;
+    const target = kind === 'sen' ? 'Senator ' + m.last : (m.title === 'Rep.' ? 'Representative ' : m.title + ' ') + m.last;
+    const who = kind === 'sen' ? 'Your senator' : (m.title === 'Rep.' ? 'Your representative' : 'Your ' + m.title.toLowerCase());
+    return `<div class="member">
+      <p class="who">${who}</p>
+      <p class="name">${esc((kind === 'sen' ? 'Sen. ' : m.title + ' ') + m.name)}</p>
+      <div class="actions">
+        ${tel ? `<a class="btn btn-primary" href="${tel}" data-ev="call" data-who="${kind}" data-target="${esc(target)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>Call ${esc(m.last)}'s office</a>` : ''}
+        ${writeUrl ? `<a class="btn btn-secondary" href="${esc(writeUrl)}" target="_blank" rel="noopener" data-ev="write" data-who="${kind}" data-target="${esc(target)}">Write${m.form ? '' : ' (via their site)'}</a>` : ''}
+      </div>
+      ${m.phone ? `<span class="phone">DC office: ${esc(m.phone)}</span>` : ''}
+    </div>`;
+  }
+
+  function render(state, districts, d, stateOnly) {
+    const out = [];
+    const reps = districts.map(k => d.house[k]).filter(Boolean);
+    const vacant = districts.filter(k => !d.house[k]);
+    reps.forEach(m => out.push(memberHTML('rep', m)));
+    (d.senate[state] || []).forEach(m => out.push(memberHTML('sen', m)));
+    const notes = [];
+    if (reps.length > 1) notes.push(`Your ZIP code is split between ${reps.length} House districts, so we're showing each possible representative. To be sure which one is yours, <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">check with your street address on house.gov</a>, or just call your senators.`);
+    if (vacant.length) notes.push(`One House seat for your area is currently vacant.`);
+    if (stateOnly) notes.push(`Showing your senators. To find your House representative, <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">look them up by address on house.gov</a>.`);
+    if (NO_SENATORS.has(state)) notes.push(`${STATES[state]} doesn't have senators in Congress, so your ${reps.length ? (reps[0].title === 'Rep.' ? 'representative' : reps[0].title.toLowerCase()) : 'delegate'} is the one to call.`);
+    $('multiNote').innerHTML = notes.join(' ');
+    $('multiNote').hidden = !notes.length;
+    $('members').innerHTML = out.join('') || `<p>We couldn't find members for that area. <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">Try house.gov's lookup</a>.</p>`;
+    const first = reps[0] ? (reps[0].title === 'Rep.' ? 'Representative ' : reps[0].title + ' ') + reps[0].last
+                : (d.senate[state] || [])[0] ? 'Senator ' + d.senate[state][0].last : 'your member of Congress';
+    firstTarget = (reps.length > 1) ? 'my representative' : first;
+    updateScript();
+    $('results').hidden = false;
+    $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  $('zipForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    zip = $('zip').value.trim();
+    if (!/^\d{5}$/.test(zip)) { $('zipMsg').textContent = 'Please enter a 5-digit ZIP code.'; return; }
+    $('zipMsg').textContent = 'Looking up…';
+    track('zip-lookup', 'Looked up a ZIP');
+    try {
+      const [d, shard] = await Promise.all([members(), getJSON('data/zips/' + zip[0] + '.json')]);
+      const districts = shard[zip];
+      if (!districts) {
+        $('zipMsg').innerHTML = `We couldn't match that ZIP code (some ZIPs are PO boxes or single buildings). Pick your state below for your senators, or <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">find your representative on house.gov</a>.`;
+        $('stateWrap').hidden = false;
+        return;
+      }
+      $('zipMsg').textContent = '';
+      render(districts[0].split('-')[0], districts, d, false);
+    } catch (err) {
+      $('zipMsg').innerHTML = `Something went wrong with the lookup. Pick your state below, or <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">use house.gov</a>.`;
+      $('stateWrap').hidden = false;
+    }
+  });
+
+  $('members').addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-ev]');
+    if (!a) return;
+    const who = a.dataset.who === 'sen' ? 'senator' : 'house';
+    if (a.dataset.target) { firstTarget = a.dataset.target; updateScript(); }
+    track(a.dataset.ev + '-' + who, (a.dataset.ev === 'call' ? 'Call: ' : 'Write: ') + who);
+  });
+
+  async function copy(text, label, ev) {
+    try { await navigator.clipboard.writeText(text); toast(label); }
+    catch (e) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); toast(label); } catch (_) { toast('Copy didn’t work. Select the text instead.'); } t.remove(); }
+    track(ev, label);
+  }
+  $('copyCall').addEventListener('click', () => copy(scriptFor(firstTarget).callText, 'Call script copied', 'copy-call'));
+  $('copyLetter').addEventListener('click', () => copy(scriptFor(firstTarget).letter, 'Message copied', 'copy-letter'));
+
+  $('doneBtn').addEventListener('click', () => {
+    track('done', 'Said they did it');
+    $('doneBtn').hidden = true;
+    $('thanks').classList.add('show');
+  });
+  $('shareBtn').addEventListener('click', async () => {
+    const url = 'https://kitchentable.show/act';
+    const text = 'Two minutes: tell Congress AI companies should have to report when things go wrong.';
+    track('share', 'Share');
+    if (navigator.share) { try { await navigator.share({ title: document.title, text, url }); } catch (e) {} }
+    else copy(url, 'Link copied', 'share-copy');
+  });
+
+  updateScript();
+})();
+</script>
+<script data-goatcounter="https://ndnichols.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
