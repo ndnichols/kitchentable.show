@@ -245,7 +245,7 @@ Thank you,
     (d.senate[state] || []).forEach(m => out.push(memberHTML('sen', m)));
     const notes = [];
     if (reps.length > 1) notes.push(`Your ZIP code is split between ${reps.length} House districts, so we're showing each possible representative. To be sure which one is yours, <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">check with your street address on house.gov</a>, or just call your senators.`);
-    if (vacant.length) notes.push(`One House seat for your area is currently vacant.`);
+    if (vacant.length) notes.push(`One House seat for your area is currently vacant, so your senators are the ones to call.`);
     if (stateOnly) notes.push(`Showing your senators. To find your House representative, <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">look them up by address on house.gov</a>.`);
     if (NO_SENATORS.has(state)) notes.push(`${STATES[state]} doesn't have senators in Congress, so your ${reps.length ? (reps[0].title === 'Rep.' ? 'representative' : reps[0].title.toLowerCase()) : 'delegate'} is the one to call.`);
     $('multiNote').innerHTML = notes.join(' ');

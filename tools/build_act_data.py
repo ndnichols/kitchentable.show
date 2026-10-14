@@ -35,15 +35,21 @@ json.dump({'house': house, 'senate': senate}, open(os.path.join(out, 'legislator
 print(f'members: {len(house)} House seats filled, {sum(map(len, senate.values()))} senators')
 
 if a.zcta:
-    z = collections.defaultdict(set)
+    land, anyp = collections.defaultdict(set), collections.defaultdict(set)
     with open(a.zcta, newline='', encoding='utf-8-sig') as f:
         for row in csv.DictReader(f, delimiter='|'):
             cd, zc = row.get('GEOID_CD119_20', ''), row.get('GEOID_ZCTA5_20', '')
             if not cd or not zc or cd[2:] == 'ZZ':
                 continue
             st = FIPS.get(cd[:2])
-            if st:
-                z[zc].add(f"{st}-{int(cd[2:])}")
+            if not st:
+                continue
+            dn = int(cd[2:])
+            d = f"{st}-{0 if dn == 98 else dn}"  # 98 = delegate / at-large territory
+            anyp[zc].add(d)
+            if int(row.get('AREALAND_PART') or 0) > 0:  # ignore water-only overlaps
+                land[zc].add(d)
+    z = {zc: (land[zc] or ds) for zc, ds in anyp.items()}
     shards = collections.defaultdict(dict)
     for zc, ds in z.items():
         shards[zc[0]][zc] = sorted(ds)
