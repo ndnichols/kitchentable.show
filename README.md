@@ -15,4 +15,4 @@ Landing page for Kitchen Table AI Safety. Plain static HTML served by GitHub Pag
 
 ## Analytics
 
-GoatCounter (ndnichols.goatcounter.com), no cookies. Page views on every page; `/act` also counts events: `act-zip-lookup`, `act-call-house`, `act-call-senator`, `act-write-*`, `act-copy-letter` (fires with “Copy message & write”), `act-tips-open`, `act-done`, `act-share`. Tag inbound links with `?utm_campaign=…` (e.g. `ep3-yt`, `ep3-clip1`) to see where people came from under Campaigns.
+GoatCounter (ndnichols.goatcounter.com), no cookies. Page views on every page; `/act` also counts events: `act-zip-lookup`, `act-call-house`, `act-call-senator`, `act-write-*`, `act-copy-letter` (fires with “Copy message & write”; `act-copy-letter-fail` if the browser blocked the copy), `act-tips-open`, `act-done`, `act-share`. Tag inbound links with `?utm_campaign=…` (e.g. `ep3-yt`, `ep3-clip1`) to see where people came from under Campaigns.

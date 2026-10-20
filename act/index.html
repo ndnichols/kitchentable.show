@@ -82,6 +82,9 @@
   .script .label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
   .script p { margin: 0 0 8px; }
   .script p:last-child { margin: 0; }
+  .letter { margin: 12px 0 0; }
+  .letter .label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+  .letter textarea { width: 100%; padding: 12px 14px; border: 1px dashed var(--line); border-radius: 12px; background: var(--bg); color: var(--ink); font: 400 16px/1.5 Inter, system-ui, sans-serif; resize: vertical; }
   .fill { background: color-mix(in srgb, var(--accent) 16%, transparent); border-radius: 4px; padding: 0 3px; }
   .row { display: flex; gap: 10px; flex-wrap: wrap; }
   .row .btn { flex: 1 1 200px; }
@@ -276,14 +279,43 @@ Thank you,
     const a = e.target.closest('a[data-ev]');
     if (!a) return;
     const who = a.dataset.who === 'sen' ? 'senator' : 'house';
-    if (a.dataset.ev === 'write' && a.dataset.target) copy(scriptFor(a.dataset.target).letter, 'Message copied. Paste it into their form.', 'copy-letter');
+    if (a.dataset.ev === 'write' && a.dataset.target) {
+      const letter = scriptFor(a.dataset.target).letter;
+      copy(letter, 'Message copied. Paste it into their form.', 'copy-letter');
+      // Always show the message too, so there's something to grab if the copy failed.
+      const card = a.closest('.member');
+      let box = card.querySelector('.letter');
+      if (!box) {
+        box = document.createElement('div');
+        box.className = 'letter';
+        box.innerHTML = '<p class="label">Your message (tap to select)</p><textarea readonly rows="12"></textarea>';
+        box.querySelector('textarea').addEventListener('focus', (ev) => ev.target.select());
+        card.querySelector('.actions').after(box);
+      }
+      box.querySelector('textarea').value = letter;
+    }
     track(a.dataset.ev + '-' + who, (a.dataset.ev === 'call' ? 'Call: ' : 'Write: ') + who);
   });
 
+  // Copy synchronously first, inside the click, before the new tab steals focus.
+  // execCommand returns false (it doesn't throw) when blocked, so check it.
+  function copySync(text) {
+    const t = document.createElement('textarea');
+    t.value = text;
+    t.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px';
+    document.body.appendChild(t);
+    t.focus(); t.select(); t.setSelectionRange(0, text.length);
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) {}
+    t.remove();
+    return ok;
+  }
   async function copy(text, label, ev) {
-    try { await navigator.clipboard.writeText(text); toast(label); }
-    catch (e) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); toast(label); } catch (_) { toast('Copy didn’t work. Select the text instead.'); } t.remove(); }
-    track(ev, label);
+    let ok = copySync(text);
+    if (!ok && navigator.clipboard) { try { await navigator.clipboard.writeText(text); ok = true; } catch (_) {} }
+    toast(ok ? label : 'Copy didn’t work. Your message is on this page; select it and copy.');
+    track(ok ? ev : ev + '-fail', ok ? label : 'Copy failed');
+    return ok;
   }
 
   $('doneBtn').addEventListener('click', () => {
