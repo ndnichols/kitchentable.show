@@ -91,6 +91,22 @@
   .apps { margin: 14px 0 0; text-align: center; font-size: 14px; color: var(--muted); }
   .apps a { color: var(--muted); }
 
+  .act {
+    display: flex; align-items: center; gap: 14px;
+    margin-top: 28px; padding: 16px 18px; border-radius: 14px;
+    background: var(--card); border: 2px solid var(--accent);
+    color: var(--ink); text-decoration: none;
+    transition: background-color .15s;
+  }
+  .act:hover { background: var(--bg); }
+  .act:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .act-icon { width: 40px; height: 40px; flex: none; border-radius: 10px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); }
+  .act-icon svg { width: 22px; height: 22px; }
+  .act-text { flex: 1; }
+  .act-text strong { display: block; font-size: 17px; font-weight: 600; }
+  .act-text span { display: block; font-size: 15px; color: var(--muted); }
+  .act-arrow { flex: none; font-size: 22px; color: var(--accent); }
+
   .about {
     margin-top: 32px; padding: 18px; background: var(--card);
     border: 1px solid var(--line); border-radius: 14px;
@@ -161,6 +177,17 @@
     <a href="https://overcast.fm/itunes6818607046">Overcast</a> ·
     <a href="https://feeds.transistor.fm/kitchen-table-ai-safety">RSS</a>
   </p>
+
+  <a class="act" href="/act/?utm_campaign=home">
+    <span class="act-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+    </span>
+    <span class="act-text">
+      <strong>Do something about it</strong>
+      <span>Tell Congress AI companies should report when things go wrong. Two minutes, one call.</span>
+    </span>
+    <span class="act-arrow" aria-hidden="true">→</span>
+  </a>
 
   <section class="about">
     <p>Hosted by <a href="https://natenichols.life">Nate Nichols</a>, who has spent almost twenty years researching, building, and selling AI systems, and leads public AI workshops at Chicago libraries.</p>
