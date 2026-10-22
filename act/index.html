@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Contact Congress · Kitchen Table AI Safety</title>
-<meta name="description" content="Two minutes: tell your members of Congress that AI companies should have to report when things go wrong.">
-<meta property="og:title" content="Tell Congress: AI companies should report when things go wrong">
+<meta name="description" content="Two minutes: tell your members of Congress what you think about AI. Look them up by ZIP code, with a short script.">
+<meta property="og:title" content="Two minutes: tell Congress what you think about AI">
 <meta property="og:description" content="Look up your members of Congress by ZIP code, with a short script. Takes two minutes.">
 <meta property="og:url" content="https://kitchentable.show/act">
 <meta property="og:type" content="website">
@@ -21,10 +21,16 @@
     --accent: #b5452b; --accent-ink: #ffffff; --accent-hover: #9a3a24; --ok: #2f6b3a;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #1c1814; --card: #26201b; --ink: #f3ebe0; --muted: #b3a593; --line: #3a3129;
       --accent: #e0694b; --accent-ink: #1c1814; --accent-hover: #f08263; --ok: #7fbf8a;
+      color-scheme: dark;
     }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1c1814; --card: #26201b; --ink: #f3ebe0; --muted: #b3a593; --line: #3a3129;
+    --accent: #e0694b; --accent-ink: #1c1814; --accent-hover: #f08263; --ok: #7fbf8a;
+    color-scheme: dark;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -106,6 +112,18 @@
   .thanks .big { font-family: Fraunces, Georgia, serif; font-size: 26px; font-weight: 700; margin: 4px 0 6px; color: var(--ok); }
   [hidden] { display: none !important; }
 
+  .earlier-note { margin: -10px 0 22px; font-size: 15px; color: var(--muted); }
+  .others h2 { margin-bottom: 4px; }
+  .others ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; }
+  .others li { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 0 0; border-top: 1px solid var(--line); }
+  .others li:first-child { border-top: 0; padding-top: 4px; }
+  .others .ep { display: block; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .others .what { min-width: 0; flex: 1 1 220px; font-weight: 600; }
+  .others .btn { min-height: 44px; padding: 8px 14px; font-size: 15px; }
+  .pill { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--ink); vertical-align: 2px; }
+  .preview-bar { background: var(--ink); color: var(--bg); font-size: 14px; padding: 10px 16px; text-align: center; }
+  .preview-bar a { color: var(--bg); }
+  .more p { margin: 0 0 12px; }
   footer { margin-top: 28px; font-size: 13px; color: var(--muted); text-align: center; }
   footer p { margin: 4px 0; }
   footer a { color: var(--muted); }
@@ -114,12 +132,14 @@
 </style>
 </head>
 <body>
+<div class="preview-bar" id="previewBar" hidden></div>
 <main>
   <a class="home" href="/"><span class="dot" aria-hidden="true"><svg viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="5" rx="2" fill="currentColor"/><rect x="10" y="21" width="4" height="18" rx="1.5" fill="currentColor"/><rect x="34" y="21" width="4" height="18" rx="1.5" fill="currentColor"/></svg></span>Kitchen Table AI Safety</a>
 
-  <p class="kicker">Two minutes, one call</p>
-  <h1>Tell Congress: AI companies should report when things go wrong.</h1>
-  <p class="lede">Right now, there's no national rule that makes AI companies tell anyone when their AI is misused or something goes badly wrong. We mostly find out when a company decides to tell us. Nuclear power plants have to report problems. AI companies should too.</p>
+  <p class="kicker" id="kicker">Two minutes, one call</p>
+  <h1 id="title">Tell Congress: AI companies should report when things go wrong.</h1>
+  <p class="lede" id="lede">Right now, there's no national rule that makes AI companies tell anyone when their AI is misused or something goes badly wrong. We mostly find out when a company decides to tell us. Nuclear power plants have to report problems. AI companies should too.</p>
+  <p class="earlier-note" id="earlierNote" hidden>Here from an earlier episode? Its action is still <a href="#others">below</a>.</p>
 
   <section class="card" aria-labelledby="step1">
     <h2 id="step1">Find your members of Congress</h2>
@@ -169,25 +189,98 @@
     </section>
   </section>
 
+  <section class="card more" id="moreCard" hidden aria-labelledby="moreTitle">
+    <h2 id="moreTitle"></h2>
+    <p id="moreText"></p>
+    <a class="btn btn-secondary" id="moreLink" href="#" target="_blank" rel="noopener"></a>
+  </section>
+
+  <section class="card others" id="others" hidden aria-labelledby="othersTitle">
+    <h2 id="othersTitle">Earlier actions</h2>
+    <p class="small muted" style="margin:0">Each one takes about two minutes, and they all still matter.</p>
+    <ul id="othersList"></ul>
+  </section>
+
   <footer>
-    <p>From the <a href="/">Kitchen Table AI Safety</a> podcast, episode 3: “AI is grown, not programmed.” Sources are in the <a href="https://podcast.kitchentable.show">show notes</a>.</p>
+    <p>From the <a href="/">Kitchen Table AI Safety</a> podcast, <span id="epLine">episode 3: “AI is grown, not programmed.”</span> Sources are in the <a href="https://podcast.kitchentable.show">show notes</a>.</p>
     <p>This page counts button clicks anonymously (no cookies, nothing personal). Member info from the public-domain <a href="https://github.com/unitedstates/congress-legislators">congress-legislators</a> project.</p>
     <p>Not affiliated with any party, campaign, or AI company. Opinions are Nate's own and do not represent his employer.</p>
   </footer>
 </main>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="actions.js"></script>
 <script>
 (function () {
   const STATES = {AL:'Alabama',AK:'Alaska',AZ:'Arizona',AR:'Arkansas',CA:'California',CO:'Colorado',CT:'Connecticut',DE:'Delaware',DC:'District of Columbia',FL:'Florida',GA:'Georgia',HI:'Hawaii',ID:'Idaho',IL:'Illinois',IN:'Indiana',IA:'Iowa',KS:'Kansas',KY:'Kentucky',LA:'Louisiana',ME:'Maine',MD:'Maryland',MA:'Massachusetts',MI:'Michigan',MN:'Minnesota',MS:'Mississippi',MO:'Missouri',MT:'Montana',NE:'Nebraska',NV:'Nevada',NH:'New Hampshire',NJ:'New Jersey',NM:'New Mexico',NY:'New York',NC:'North Carolina',ND:'North Dakota',OH:'Ohio',OK:'Oklahoma',OR:'Oregon',PA:'Pennsylvania',RI:'Rhode Island',SC:'South Carolina',SD:'South Dakota',TN:'Tennessee',TX:'Texas',UT:'Utah',VT:'Vermont',VA:'Virginia',WA:'Washington',WV:'West Virginia',WI:'Wisconsin',WY:'Wyoming',PR:'Puerto Rico',GU:'Guam',VI:'U.S. Virgin Islands',AS:'American Samoa',MP:'Northern Mariana Islands'};
   const NO_SENATORS = new Set(['DC','PR','GU','VI','AS','MP']);
   const HOUSE_LOOKUP = 'https://www.house.gov/representatives/find-your-representative';
   const $ = (id) => document.getElementById(id);
-  let data = null, zip = '';
+  let data = null, zip = '', lastRender = null;
+
+  // ---- Which action to show -------------------------------------------
+  // ?preview shows actions that aren't live yet; ?now=2026-10-27T08:00-05:00
+  // pretends it's that time (both are for checking the page before a launch).
+  const params = new URLSearchParams(location.search);
+  const PREVIEW = params.has('preview') || window.KT_PREVIEW === true;
+  function nowMs() {
+    const forced = window.KT_NOW || params.get('now');
+    const ms = forced ? Date.parse(forced) : NaN;
+    return isNaN(ms) ? Date.now() : ms;
+  }
+  const ALL = (window.KT_ACTIONS || []).slice().sort((a, b) => b.episode - a.episode);
+  const isLive = (a) => Date.parse(a.live) <= nowMs();
+  function visible() { const v = ALL.filter(a => PREVIEW || isLive(a)); return v.length ? v : ALL.slice(-1); }
+  function pick() {
+    const v = visible();
+    const byHash = v.find(a => '#' + a.id === location.hash);
+    if (byHash) return byHash;
+    const m = /^ep0*(\d+)/i.exec(params.get('utm_campaign') || '');
+    const byEp = m && v.find(a => a.episode === Number(m[1]));
+    return byEp || v[0];
+  }
+  let ACTION = pick();
 
   function track(path, title) {
-    try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'act-' + path, title: title || path, event: true }); } catch (e) {}
+    try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: 'act-' + ACTION.ev + path, title: (ACTION.ev ? 'Ep ' + ACTION.episode + ': ' : '') + (title || path), event: true }); } catch (e) {}
   }
+
+  function showAction(a, fromClick) {
+    ACTION = a;
+    $('kicker').textContent = a.kicker;
+    $('title').textContent = a.title;
+    $('lede').textContent = a.lede;
+    document.title = a.title.replace(/\.$/, '') + ' · Kitchen Table AI Safety';
+    $('epLine').textContent = `episode ${a.episode}: “${a.episodeTitle}.”`;
+    const others = visible().filter(o => o.id !== a.id);
+    $('earlierNote').hidden = !(others.length && others.every(o => o.episode < a.episode));
+    $('others').hidden = !others.length;
+    $('othersTitle').textContent = others.every(o => o.episode < a.episode) ? 'Earlier actions' : 'Other actions';
+    $('othersList').innerHTML = others.map(o => `<li>
+      <span class="what"><span class="ep">Episode ${o.episode}${!isLive(o) ? '<span class="pill">Not live yet</span>' : ''}</span>${esc(o.short)}</span>
+      <a class="btn btn-secondary" href="#${o.id}" data-switch="${o.id}">Do this one</a></li>`).join('');
+    $('moreCard').hidden = !a.more;
+    if (a.more) { $('moreTitle').textContent = a.more.title; $('moreText').textContent = a.more.text; $('moreLink').textContent = a.more.label; $('moreLink').href = a.more.href; }
+    $('doneBtn').hidden = false; $('thanks').classList.remove('show');
+    if (lastRender) render.apply(null, lastRender);
+    if (fromClick) {
+      try { history.replaceState(null, '', location.pathname + location.search + '#' + a.id); } catch (e) {}
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (PREVIEW) {
+      $('previewBar').hidden = false;
+      $('previewBar').innerHTML = `Preview: showing actions that aren't live yet. "${esc(a.short)}" ${isLive(a) ? 'is live now' : 'goes live ' + new Date(a.live).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}.`;
+    }
+  }
+  $('othersList').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-switch]');
+    if (!b) return;
+    e.preventDefault();
+    const a = ALL.find(x => x.id === b.dataset.switch);
+    if (a) { showAction(a, true); track('switch', 'Switched to ' + a.id); }
+  });
+  window.addEventListener('hashchange', () => { const a = visible().find(x => '#' + x.id === location.hash); if (a && a !== ACTION) showAction(a, false); });
+  window.KT_rerender = () => showAction(pick(), false);
   function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1800); }
   function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   async function getJSON(u) { const r = await fetch(u); if (!r.ok) throw new Error(r.status); return r.json(); }
@@ -197,21 +290,20 @@
 
   const sel = $('state');
   Object.entries(STATES).sort((a, b) => a[1].localeCompare(b[1])).forEach(([k, v]) => { const o = document.createElement('option'); o.value = k; o.textContent = v; sel.appendChild(o); });
-  sel.addEventListener('change', async () => { if (!sel.value) return; track('state-pick', 'Picked a state'); const d = await members(); render(sel.value, [], d, true); });
+  sel.addEventListener('change', async () => { if (!sel.value) return; track('state-pick', 'Picked a state'); const d = await members(); lastRender = null; render(sel.value, [], d, true); });
 
   function scriptFor(target) {
+    const z = zip || '[your ZIP]';
     return {
-      call: `<p>Hi, my name is <span class="fill">[your name]</span>, and I'm a constituent from ZIP code <span class="fill">${esc(zip || '[your ZIP]')}</span>.</p>
-<p>I'm calling to ask ${esc(target)} to support requiring AI companies to report when things go wrong with their AI, and not to override state laws that already require it.</p>
+      call: `<p>Hi, my name is <span class="fill">[your name]</span>, and I'm a constituent from ZIP code <span class="fill">${esc(z)}</span>.</p>
+<p>${esc(ACTION.ask(target))}</p>
 <p>Thank you!</p>`,
-      callText: `Hi, my name is [your name], and I'm a constituent from ZIP code ${zip || '[your ZIP]'}. I'm calling to ask ${target} to support requiring AI companies to report when things go wrong with their AI, and not to override state laws that already require it. Thank you!`,
-      letter: `Subject: Require AI companies to report when things go wrong
+      callText: `Hi, my name is [your name], and I'm a constituent from ZIP code ${z}. ${ACTION.ask(target)} Thank you!`,
+      letter: `Subject: ${ACTION.subject}
 
 Dear ${target},
 
-I'm a constituent from ZIP code ${zip || '[your ZIP]'}. Right now there's no national rule that requires AI companies to report when their AI systems are misused or something goes seriously wrong. We mostly find out only when a company decides to tell us.
-
-Nuclear power plants have to report problems. AI companies should too. Please support national rules that require AI companies to report when things go wrong, and don't override the state laws that already require it.
+I'm a constituent from ZIP code ${z}. ${ACTION.letterBody.join('\n\n')}
 
 Thank you,
 [your name]`
@@ -236,6 +328,8 @@ Thank you,
   }
 
   function render(state, districts, d, stateOnly) {
+    const first = !lastRender;
+    lastRender = [state, districts, d, stateOnly];
     const out = [];
     const reps = districts.map(k => d.house[k]).filter(Boolean);
     const vacant = districts.filter(k => !d.house[k]);
@@ -250,7 +344,7 @@ Thank you,
     $('multiNote').hidden = !notes.length;
     $('members').innerHTML = out.join('') || `<p>We couldn't find members for that area. <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">Try house.gov's lookup</a>.</p>`;
     $('results').hidden = false;
-    $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (first) $('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   $('zipForm').addEventListener('submit', async (e) => {
@@ -268,6 +362,7 @@ Thank you,
         return;
       }
       $('zipMsg').textContent = '';
+      lastRender = null;
       render(districts[0].split('-')[0], districts, d, false);
     } catch (err) {
       $('zipMsg').innerHTML = `Something went wrong with the lookup. Pick your state below, or <a href="${HOUSE_LOOKUP}" target="_blank" rel="noopener">use house.gov</a>.`;
@@ -324,13 +419,14 @@ Thank you,
     $('thanks').classList.add('show');
   });
   $('shareBtn').addEventListener('click', async () => {
-    const url = 'https://kitchentable.show/act';
-    const text = 'Two minutes: tell Congress AI companies should have to report when things go wrong.';
+    const url = 'https://kitchentable.show/act#' + ACTION.id;
+    const text = ACTION.shareText;
     track('share', 'Share');
     if (navigator.share) { try { await navigator.share({ title: document.title, text, url }); } catch (e) {} }
     else copy(url, 'Link copied', 'share-copy');
   });
 
+  showAction(ACTION, false);
 })();
 </script>
 <script data-goatcounter="https://ndnichols.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
