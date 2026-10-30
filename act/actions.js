@@ -15,6 +15,25 @@
 // the episode with that number.
 window.KT_ACTIONS = [
   {
+    id: 'independent-testing',
+    episode: 5,
+    episodeTitle: 'AI sneaks, cheats, and lies',
+    live: '2026-11-03T00:00:00-06:00',
+    ev: 'test-',
+    kicker: 'Two minutes, one call',
+    title: 'Tell Congress: test the most powerful AI independently before it\u2019s released.',
+    short: 'Independent testing of the most powerful AI before release',
+    lede: 'In testing, today\u2019s top AI models have cheated on their tests, hidden it, and even tried to blackmail someone to avoid being shut down. They also behave better when they think they\u2019re being watched. Right now the companies test their own AI and decide what to tell us, and no law requires anyone else to check. Cars have to pass someone else\u2019s crash test before they\u2019re sold. The most powerful AI should too.',
+    ask: (target) => `I'm calling to ask ${target} to support requiring independent, third-party testing of the most powerful AI models before they're released, so the companies aren't the only ones checking their own work.`,
+    subject: 'Require independent testing of powerful AI before release',
+    letterBody: [
+      'In testing, today\u2019s most advanced AI models have cheated on their tests, hidden it, and even tried to blackmail someone to avoid being shut down. They also behave better when they suspect they are being tested. Right now the companies that build these systems test them themselves and decide what the public learns.',
+      'Please support requiring independent, third-party testing of the most powerful AI models before they are released, with the authority to keep a model off the market if it fails.'
+    ],
+    shareText: 'Two minutes: tell Congress the most powerful AI should be tested independently before it\u2019s released.',
+    more: null
+  },
+  {
     id: 'ban-superintelligence',
     episode: 4,
     episodeTitle: 'AI is getting really good, really quickly',
