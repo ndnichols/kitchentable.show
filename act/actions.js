@@ -15,6 +15,25 @@
 // the episode with that number.
 window.KT_ACTIONS = [
   {
+    id: 'my-vote',
+    episode: 6,
+    episodeTitle: 'Everyone thinks AI should be regulated. It’s not',
+    live: '2026-11-10T00:00:00-06:00',
+    ev: 'vote-',
+    kicker: 'Two minutes, one call',
+    title: 'Tell Congress: AI safety matters to you, and your vote is riding on it.',
+    short: 'AI safety matters to me, and my vote is riding on it',
+    lede: 'Most Americans want AI regulated, even if that means slower development, and even the biggest AI companies say they want rules. But Congress hasn’t passed any law on the safety of the most powerful AI, and most of Washington’s effort has gone into blocking the state laws we do have. Politicians move when an issue starts costing votes. In the November 2026 election, 56% of voters said AI and data centers were a crucial or major factor in their vote. Make sure your members of Congress know you’re one of them.',
+    ask: (target) => `I'm calling to tell ${target} that AI safety is important to me and my vote is riding on it. Please support binding safety rules for the most powerful AI models, and don't block the states from protecting us in the meantime.`,
+    subject: 'AI safety is important to me, and my vote is riding on it',
+    letterBody: [
+      'Most Americans want AI regulated, even if it means slower development, and even the largest AI companies say they want rules. Yet there is still no federal law on the safety of the most powerful AI models, and the safety commitments that exist are voluntary.',
+      'AI safety is important to me, and my vote is riding on it. Please support binding safety rules for the most powerful AI models, and don’t block the states from protecting their residents in the meantime.'
+    ],
+    shareText: 'Two minutes: tell Congress AI safety matters to you and your vote is riding on it.',
+    more: null
+  },
+  {
     id: 'independent-testing',
     episode: 5,
     episodeTitle: 'AI sneaks, cheats, and lies',
